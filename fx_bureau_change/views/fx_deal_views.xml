@@ -87,7 +87,7 @@
                     <separator/>
                     <filter name="filter_draft" string="Brouillon" domain="[('state', '=', 'draft')]"/>
                     <filter name="filter_posted" string="Validées" domain="[('state', '=', 'posted')]"/>
-                    <group expand="0" string="Grouper par">
+                    <group>
                         <filter name="groupby_currency" string="Devise" context="{'group_by': 'currency_id'}"/>
                         <filter name="groupby_partner" string="Tiers" context="{'group_by': 'partner_id'}"/>
                         <filter name="groupby_state" string="État" context="{'group_by': 'state'}"/>
