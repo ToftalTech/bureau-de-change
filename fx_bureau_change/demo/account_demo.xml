@@ -31,12 +31,19 @@
             <field name="account_type">income</field>
         </record>
 
-        <!-- Journal unique des opérations de change (type general : valide pour
-             out_invoice comme in_invoice) -->
-        <record id="journal_fx_change" model="account.journal">
-            <field name="name">Opérations de change</field>
-            <field name="code">CHG</field>
-            <field name="type">general</field>
+        <!-- Deux journaux dédiés aux opérations de change : Odoo impose un
+             journal de type 'sale' pour toute facture client (out_invoice,
+             donc les ventes de devises) et 'purchase' pour toute facture
+             fournisseur (in_invoice, donc les achats de devises). -->
+        <record id="journal_fx_sale" model="account.journal">
+            <field name="name">Ventes de devises</field>
+            <field name="code">CHV</field>
+            <field name="type">sale</field>
+        </record>
+        <record id="journal_fx_purchase" model="account.journal">
+            <field name="name">Achats de devises</field>
+            <field name="code">CHA</field>
+            <field name="type">purchase</field>
         </record>
 
         <!-- Activation des devises traitées par le bureau -->
@@ -53,9 +60,10 @@
             <field name="active">1</field>
         </record>
 
-        <!-- Configuration de la société : journal + compte de marge -->
+        <!-- Configuration de la société : journaux + compte de marge -->
         <record id="base.main_company" model="res.company">
-            <field name="fx_journal_id" ref="journal_fx_change"/>
+            <field name="fx_sale_journal_id" ref="journal_fx_sale"/>
+            <field name="fx_purchase_journal_id" ref="journal_fx_purchase"/>
             <field name="fx_margin_account_id" ref="account_fx_margin"/>
         </record>
 

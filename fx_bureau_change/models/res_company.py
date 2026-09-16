@@ -4,10 +4,21 @@ from odoo import fields, models
 class ResCompany(models.Model):
     _inherit = 'res.company'
 
-    fx_journal_id = fields.Many2one(
+    fx_sale_journal_id = fields.Many2one(
         'account.journal',
-        string="Journal des opérations de change",
-        domain="[('company_id', '=', id), ('type', '=', 'general')]",
+        string="Journal des ventes de devises",
+        domain="[('company_id', '=', id), ('type', '=', 'sale')]",
+        help="Journal utilisé pour la facture client générée lors d'une vente "
+             "de devises. Odoo impose un journal de type 'Ventes' pour toute "
+             "facture client (out_invoice).",
+    )
+    fx_purchase_journal_id = fields.Many2one(
+        'account.journal',
+        string="Journal des achats de devises",
+        domain="[('company_id', '=', id), ('type', '=', 'purchase')]",
+        help="Journal utilisé pour la facture fournisseur générée lors d'un "
+             "achat de devises. Odoo impose un journal de type 'Achats' pour "
+             "toute facture fournisseur (in_invoice).",
     )
     fx_margin_account_id = fields.Many2one(
         'account.account',

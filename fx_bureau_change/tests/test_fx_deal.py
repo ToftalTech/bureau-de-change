@@ -23,13 +23,19 @@ class TestFxDeal(TransactionCase):
             'name': "Marge de change",
             'account_type': 'income',
         })
-        cls.journal = cls.env['account.journal'].create({
-            'name': "Opérations de change",
-            'code': 'FXOP',
-            'type': 'general',
+        cls.sale_journal = cls.env['account.journal'].create({
+            'name': "Ventes de devises",
+            'code': 'FXV',
+            'type': 'sale',
+        })
+        cls.purchase_journal = cls.env['account.journal'].create({
+            'name': "Achats de devises",
+            'code': 'FXA',
+            'type': 'purchase',
         })
         cls.env.company.write({
-            'fx_journal_id': cls.journal.id,
+            'fx_sale_journal_id': cls.sale_journal.id,
+            'fx_purchase_journal_id': cls.purchase_journal.id,
             'fx_margin_account_id': cls.margin_account.id,
             'fx_currency_account_ids': [(0, 0, {
                 'currency_id': cls.currency_eur.id,

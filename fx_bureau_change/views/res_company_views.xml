@@ -10,7 +10,8 @@
                 <xpath expr="//notebook" position="inside">
                     <page string="Bureau de change" groups="fx_bureau_change.group_fx_manager">
                         <group string="Comptabilisation">
-                            <field name="fx_journal_id"/>
+                            <field name="fx_sale_journal_id"/>
+                            <field name="fx_purchase_journal_id"/>
                             <field name="fx_margin_account_id"/>
                         </group>
                         <group string="Comptes de position par devise">

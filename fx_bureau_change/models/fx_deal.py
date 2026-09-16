@@ -163,7 +163,10 @@ class FxDeal(models.Model):
     def _create_account_move(self):
         self.ensure_one()
         company = self.company_id
-        journal = company.fx_journal_id
+        journal = (
+            company.fx_sale_journal_id if self.direction == 'sell'
+            else company.fx_purchase_journal_id
+        )
         if not journal:
             raise UserError(_(
                 "Aucun journal des opérations de change n'est configuré pour la "
