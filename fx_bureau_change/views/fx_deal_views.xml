@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="view_fx_deal_list" model="ir.ui.view">
+            <field name="name">fx.deal.list</field>
+            <field name="model">fx.deal</field>
+            <field name="arch" type="xml">
+                <list string="Opérations de change" default_order="date desc, id desc"
+                      decoration-muted="state == 'cancel'" decoration-success="state == 'posted'">
+                    <field name="name"/>
+                    <field name="date"/>
+                    <field name="partner_id"/>
+                    <field name="direction"/>
+                    <field name="currency_id"/>
+                    <field name="quantity"/>
+                    <field name="rate"/>
+                    <field name="amount_xof" sum="Total"/>
+                    <field name="margin_xof" sum="Total" groups="fx_bureau_change.group_fx_manager"/>
+                    <field name="payment_mode"/>
+                    <field name="state"/>
+                </list>
+            </field>
+        </record>
+
+        <record id="view_fx_deal_form" model="ir.ui.view">
+            <field name="name">fx.deal.form</field>
+            <field name="model">fx.deal</field>
+            <field name="arch" type="xml">
+                <form string="Opération de change">
+                    <header>
+                        <button name="action_post" type="object" string="Valider"
+                                class="btn-primary" invisible="state != 'draft'"/>
+                        <button name="action_cancel" type="object" string="Annuler"
+                                invisible="state != 'draft'"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,posted"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button name="action_view_move" type="object" string="Pièce comptable"
+                                    icon="fa-book" invisible="not move_id"
+                                    groups="fx_bureau_change.group_fx_manager"/>
+                        </div>
+                        <div class="oe_title">
+                            <h1><field name="name" readonly="1"/></h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="direction" widget="radio" options="{'horizontal': true}"/>
+                                <field name="partner_id"/>
+                                <field name="date"/>
+                            </group>
+                            <group>
+                                <field name="currency_id"/>
+                                <field name="quantity"/>
+                                <field name="rate"/>
+                                <field name="amount_xof"/>
+                            </group>
+                        </group>
+                        <group>
+                            <group string="Règlement">
+                                <field name="payment_mode"/>
+                                <field name="date_due" invisible="payment_mode != 'credit'"
+                                       required="payment_mode == 'credit'"/>
+                            </group>
+                            <group string="Valorisation" groups="fx_bureau_change.group_fx_manager">
+                                <field name="cost_xof"/>
+                                <field name="margin_xof"/>
+                            </group>
+                        </group>
+                    </sheet>
+                    <chatter/>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_fx_deal_search" model="ir.ui.view">
+            <field name="name">fx.deal.search</field>
+            <field name="model">fx.deal</field>
+            <field name="arch" type="xml">
+                <search string="Opérations de change">
+                    <field name="name"/>
+                    <field name="partner_id"/>
+                    <field name="currency_id"/>
+                    <filter name="filter_buy" string="Achats" domain="[('direction', '=', 'buy')]"/>
+                    <filter name="filter_sell" string="Ventes" domain="[('direction', '=', 'sell')]"/>
+                    <separator/>
+                    <filter name="filter_draft" string="Brouillon" domain="[('state', '=', 'draft')]"/>
+                    <filter name="filter_posted" string="Validées" domain="[('state', '=', 'posted')]"/>
+                    <group expand="0" string="Grouper par">
+                        <filter name="groupby_currency" string="Devise" context="{'group_by': 'currency_id'}"/>
+                        <filter name="groupby_partner" string="Tiers" context="{'group_by': 'partner_id'}"/>
+                        <filter name="groupby_state" string="État" context="{'group_by': 'state'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="action_fx_deal" model="ir.actions.act_window">
+            <field name="name">Opérations de change</field>
+            <field name="res_model">fx.deal</field>
+            <field name="view_mode">list,form</field>
+            <field name="search_view_id" ref="view_fx_deal_search"/>
+            <field name="context">{'search_default_filter_draft': 1}</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Enregistrer une nouvelle opération de change
+                </p>
+            </field>
+        </record>
+
+        <menuitem id="menu_fx_root" name="Bureau de change" sequence="50"/>
+        <menuitem id="menu_fx_deal" name="Opérations" parent="menu_fx_root"
+                  action="action_fx_deal" sequence="10"/>
+
+    </data>
+</odoo>

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="view_fx_rate_list" model="ir.ui.view">
+            <field name="name">fx.rate.list</field>
+            <field name="model">fx.rate</field>
+            <field name="arch" type="xml">
+                <list string="Cours du jour" editable="top" default_order="date desc, currency_id">
+                    <field name="date"/>
+                    <field name="currency_id"/>
+                    <field name="rate_buy"/>
+                    <field name="rate_sell"/>
+                    <field name="reference_rate"/>
+                    <field name="source"/>
+                </list>
+            </field>
+        </record>
+
+        <record id="view_fx_rate_form" model="ir.ui.view">
+            <field name="name">fx.rate.form</field>
+            <field name="model">fx.rate</field>
+            <field name="arch" type="xml">
+                <form string="Cours du jour">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="currency_id"/>
+                                <field name="date"/>
+                                <field name="source"/>
+                            </group>
+                            <group>
+                                <field name="rate_buy"/>
+                                <field name="rate_sell"/>
+                                <field name="reference_rate"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_fx_rate" model="ir.actions.act_window">
+            <field name="name">Cours du jour</field>
+            <field name="res_model">fx.rate</field>
+            <field name="view_mode">list,form</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Définir le cours du jour pour une devise
+                </p>
+            </field>
+        </record>
+
+        <menuitem id="menu_fx_rate" name="Cours du jour" parent="menu_fx_root"
+                  action="action_fx_rate" sequence="30"
+                  groups="fx_bureau_change.group_fx_manager"/>
+
+    </data>
+</odoo>

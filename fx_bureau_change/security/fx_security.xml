@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="module_category_fx_bureau_change" model="ir.module.category">
+            <field name="name">Bureau de change</field>
+            <field name="sequence">20</field>
+        </record>
+
+        <record id="group_fx_cashier" model="res.groups">
+            <field name="name">Caissier</field>
+            <field name="category_id" ref="module_category_fx_bureau_change"/>
+            <field name="comment">Saisie des opérations de change au guichet. Pas d'accès aux cours du jour ni à la marge.</field>
+        </record>
+
+        <record id="group_fx_manager" model="res.groups">
+            <field name="name">Gérant</field>
+            <field name="category_id" ref="module_category_fx_bureau_change"/>
+            <field name="implied_ids" eval="[(4, ref('group_fx_cashier'))]"/>
+            <field name="comment">Accès complet : cours du jour, positions, marge, configuration comptable.</field>
+        </record>
+
+    </data>
+</odoo>

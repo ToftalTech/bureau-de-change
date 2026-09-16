@@ -23,7 +23,15 @@ opération de change est une facture, avec ses propres comptes paramétrables.
     'author': "Toftal Technologies",
     'license': 'LGPL-3',
     'depends': ['account'],
-    'data': [],
+    'data': [
+        'security/fx_security.xml',
+        'security/ir.model.access.csv',
+        'data/ir_sequence_data.xml',
+        'views/fx_deal_views.xml',
+        'views/fx_position_views.xml',
+        'views/fx_rate_views.xml',
+        'views/res_company_views.xml',
+    ],
     'demo': [
         'demo/account_demo.xml',
         'demo/res_partner_demo.xml',

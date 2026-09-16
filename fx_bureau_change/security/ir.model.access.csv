@@ -1,0 +1,6 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_fx_deal_cashier,fx.deal.cashier,model_fx_deal,group_fx_cashier,1,1,1,1
+access_fx_deal_manager,fx.deal.manager,model_fx_deal,group_fx_manager,1,1,1,1
+access_fx_position_manager,fx.position.manager,model_fx_position,group_fx_manager,1,1,1,1
+access_fx_rate_manager,fx.rate.manager,model_fx_rate,group_fx_manager,1,1,1,1
+access_fx_currency_account_manager,fx.currency.account.manager,model_fx_currency_account,group_fx_manager,1,1,1,1

@@ -139,6 +139,17 @@ class FxDeal(models.Model):
             deal.state = 'posted'
         return True
 
+    def action_view_move(self):
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _("Pièce comptable"),
+            'res_model': 'account.move',
+            'res_id': self.move_id.id,
+            'view_mode': 'form',
+            'target': 'current',
+        }
+
     def action_cancel(self):
         for deal in self:
             if deal.state == 'posted':

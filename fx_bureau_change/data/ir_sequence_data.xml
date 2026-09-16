@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="seq_fx_deal" model="ir.sequence">
+        <field name="name">Opération de change</field>
+        <field name="code">fx.deal</field>
+        <field name="prefix">CHG/%(year)s/</field>
+        <field name="padding">4</field>
+        <field name="company_id" eval="False"/>
+    </record>
+</odoo>
