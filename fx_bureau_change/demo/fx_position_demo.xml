@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Stock d'ouverture en devises (fonds de roulement initial du bureau).
+             Ces positions ne sont pas adossées à une écriture comptable
+             d'apport : elles servent uniquement à disposer d'un stock testable
+             dès l'installation, sans devoir d'abord enregistrer des achats. -->
+
+        <record id="fx_position_eur_opening" model="fx.position">
+            <field name="company_id" ref="base.main_company"/>
+            <field name="currency_id" ref="base.EUR"/>
+            <field name="quantity">2000.0</field>
+            <field name="unit_cost">655.0</field>
+            <field name="value_xof">1310000.0</field>
+        </record>
+
+        <record id="fx_position_usd_opening" model="fx.position">
+            <field name="company_id" ref="base.main_company"/>
+            <field name="currency_id" ref="base.USD"/>
+            <field name="quantity">2500.0</field>
+            <field name="unit_cost">600.0</field>
+            <field name="value_xof">1500000.0</field>
+        </record>
+
+        <record id="fx_position_chf_opening" model="fx.position">
+            <field name="company_id" ref="base.main_company"/>
+            <field name="currency_id" ref="base.CHF"/>
+            <field name="quantity">500.0</field>
+            <field name="unit_cost">680.0</field>
+            <field name="value_xof">340000.0</field>
+        </record>
+
+        <record id="fx_position_cad_opening" model="fx.position">
+            <field name="company_id" ref="base.main_company"/>
+            <field name="currency_id" ref="base.CAD"/>
+            <field name="quantity">300.0</field>
+            <field name="unit_cost">440.0</field>
+            <field name="value_xof">132000.0</field>
+        </record>
+    </data>
+</odoo>

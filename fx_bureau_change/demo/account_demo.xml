@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <!-- Comptes de position par devise (SYSCOHADA, classe 5 - Trésorerie) -->
+        <record id="account_fx_position_eur" model="account.account">
+            <field name="code">571100</field>
+            <field name="name">Caisse devises EUR</field>
+            <field name="account_type">asset_current</field>
+        </record>
+        <record id="account_fx_position_usd" model="account.account">
+            <field name="code">571200</field>
+            <field name="name">Caisse devises USD</field>
+            <field name="account_type">asset_current</field>
+        </record>
+        <record id="account_fx_position_chf" model="account.account">
+            <field name="code">571300</field>
+            <field name="name">Caisse devises CHF</field>
+            <field name="account_type">asset_current</field>
+        </record>
+        <record id="account_fx_position_cad" model="account.account">
+            <field name="code">571400</field>
+            <field name="name">Caisse devises CAD</field>
+            <field name="account_type">asset_current</field>
+        </record>
+
+        <!-- Compte de produit dédié à la marge de change (classe 7) -->
+        <record id="account_fx_margin" model="account.account">
+            <field name="code">706000</field>
+            <field name="name">Marge sur opérations de change</field>
+            <field name="account_type">income</field>
+        </record>
+
+        <!-- Journal unique des opérations de change (type general : valide pour
+             out_invoice comme in_invoice) -->
+        <record id="journal_fx_change" model="account.journal">
+            <field name="name">Opérations de change</field>
+            <field name="code">CHG</field>
+            <field name="type">general</field>
+        </record>
+
+        <!-- Activation des devises traitées par le bureau -->
+        <record id="base.EUR" model="res.currency">
+            <field name="active">1</field>
+        </record>
+        <record id="base.USD" model="res.currency">
+            <field name="active">1</field>
+        </record>
+        <record id="base.CHF" model="res.currency">
+            <field name="active">1</field>
+        </record>
+        <record id="base.CAD" model="res.currency">
+            <field name="active">1</field>
+        </record>
+
+        <!-- Configuration de la société : journal + compte de marge -->
+        <record id="base.main_company" model="res.company">
+            <field name="fx_journal_id" ref="journal_fx_change"/>
+            <field name="fx_margin_account_id" ref="account_fx_margin"/>
+        </record>
+
+        <!-- Compte de position par devise -->
+        <record id="fx_currency_account_eur" model="fx.currency.account">
+            <field name="company_id" ref="base.main_company"/>
+            <field name="currency_id" ref="base.EUR"/>
+            <field name="account_id" ref="account_fx_position_eur"/>
+        </record>
+        <record id="fx_currency_account_usd" model="fx.currency.account">
+            <field name="company_id" ref="base.main_company"/>
+            <field name="currency_id" ref="base.USD"/>
+            <field name="account_id" ref="account_fx_position_usd"/>
+        </record>
+        <record id="fx_currency_account_chf" model="fx.currency.account">
+            <field name="company_id" ref="base.main_company"/>
+            <field name="currency_id" ref="base.CHF"/>
+            <field name="account_id" ref="account_fx_position_chf"/>
+        </record>
+        <record id="fx_currency_account_cad" model="fx.currency.account">
+            <field name="company_id" ref="base.main_company"/>
+            <field name="currency_id" ref="base.CAD"/>
+            <field name="account_id" ref="account_fx_position_cad"/>
+        </record>
+
+    </data>
+</odoo>

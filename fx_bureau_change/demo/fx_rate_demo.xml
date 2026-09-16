@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Cours illustratifs, datés du jour de l'installation. L'EUR est
+             arrimé au XOF (parité fixe BCEAO 1 EUR = 655,957 XOF) : le bureau
+             applique tout de même un spread pour sa marge de guichet. Les
+             cours USD/CHF/CAD sont indicatifs et doivent être ajustés
+             quotidiennement en conditions réelles. -->
+
+        <record id="fx_rate_eur_today" model="fx.rate">
+            <field name="currency_id" ref="base.EUR"/>
+            <field name="date" eval="(DateTime.today()).strftime('%Y-%m-%d')"/>
+            <field name="rate_buy">654.5</field>
+            <field name="rate_sell">657.5</field>
+            <field name="reference_rate">655.957</field>
+            <field name="source">manual</field>
+        </record>
+
+        <record id="fx_rate_usd_today" model="fx.rate">
+            <field name="currency_id" ref="base.USD"/>
+            <field name="date" eval="(DateTime.today()).strftime('%Y-%m-%d')"/>
+            <field name="rate_buy">598.0</field>
+            <field name="rate_sell">608.0</field>
+            <field name="reference_rate">602.5</field>
+            <field name="source">manual</field>
+        </record>
+
+        <record id="fx_rate_chf_today" model="fx.rate">
+            <field name="currency_id" ref="base.CHF"/>
+            <field name="date" eval="(DateTime.today()).strftime('%Y-%m-%d')"/>
+            <field name="rate_buy">675.0</field>
+            <field name="rate_sell">685.0</field>
+            <field name="reference_rate">680.0</field>
+            <field name="source">manual</field>
+        </record>
+
+        <record id="fx_rate_cad_today" model="fx.rate">
+            <field name="currency_id" ref="base.CAD"/>
+            <field name="date" eval="(DateTime.today()).strftime('%Y-%m-%d')"/>
+            <field name="rate_buy">435.0</field>
+            <field name="rate_sell">445.0</field>
+            <field name="reference_rate">440.0</field>
+            <field name="source">manual</field>
+        </record>
+    </data>
+</odoo>

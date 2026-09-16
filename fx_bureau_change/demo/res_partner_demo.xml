@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <record id="partner_aissatou_diallo" model="res.partner">
+            <field name="name">Aïssatou Diallo</field>
+            <field name="street">Rue 10 x Rue 15, Plateau</field>
+            <field name="city">Dakar</field>
+            <field name="country_id" ref="base.sn"/>
+            <field name="phone">+221 77 123 45 67</field>
+            <field name="is_company">0</field>
+        </record>
+
+        <record id="partner_cheikh_ahmadou_ba" model="res.partner">
+            <field name="name">Cheikh Ahmadou Ba</field>
+            <field name="street">Sacré-Cœur 3, VDN</field>
+            <field name="city">Dakar</field>
+            <field name="country_id" ref="base.sn"/>
+            <field name="phone">+221 78 234 56 78</field>
+            <field name="is_company">0</field>
+        </record>
+
+        <record id="partner_fatou_bintou_sow" model="res.partner">
+            <field name="name">Fatou Bintou Sow</field>
+            <field name="street">Rue 6, Point E</field>
+            <field name="city">Dakar</field>
+            <field name="country_id" ref="base.sn"/>
+            <field name="phone">+221 70 345 67 89</field>
+            <field name="is_company">0</field>
+        </record>
+
+        <record id="partner_teranga_import_export" model="res.partner">
+            <field name="name">Teranga Import-Export SARL</field>
+            <field name="street">Zone Industrielle, Route de Rufisque</field>
+            <field name="city">Dakar</field>
+            <field name="country_id" ref="base.sn"/>
+            <field name="phone">+221 33 821 45 90</field>
+            <field name="vat">SN0012345 2Z2</field>
+            <field name="is_company">1</field>
+        </record>
+
+        <record id="partner_baobab_voyages" model="res.partner">
+            <field name="name">Baobab Voyages SARL</field>
+            <field name="street">Route des Almadies</field>
+            <field name="city">Dakar</field>
+            <field name="country_id" ref="base.sn"/>
+            <field name="phone">+221 33 860 12 34</field>
+            <field name="vat">SN0098765 2Z2</field>
+            <field name="is_company">1</field>
+        </record>
+
+    </data>
+</odoo>

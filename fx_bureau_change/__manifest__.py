@@ -24,6 +24,13 @@ opération de change est une facture, avec ses propres comptes paramétrables.
     'license': 'LGPL-3',
     'depends': ['account'],
     'data': [],
+    'demo': [
+        'demo/account_demo.xml',
+        'demo/res_partner_demo.xml',
+        'demo/fx_position_demo.xml',
+        'demo/fx_rate_demo.xml',
+        'demo/fx_deal_demo.xml',
+    ],
     'installable': True,
     'application': True,
 }

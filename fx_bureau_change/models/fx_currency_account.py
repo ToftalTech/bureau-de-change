@@ -11,7 +11,7 @@ class FxCurrencyAccount(models.Model):
     currency_id = fields.Many2one('res.currency', required=True, string="Devise")
     account_id = fields.Many2one(
         'account.account', required=True, string="Compte de position",
-        domain="[('company_id', '=', company_id)]",
+        domain="[('company_ids', 'in', company_id)]",
     )
 
     _sql_constraints = [

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Opérations en brouillon, à valider manuellement (bouton "Valider")
+             pour tester le flux CMP -> facture -> lettrage. Elles ne sont pas
+             préchargées à l'état "posted" : une opération validée doit
+             résulter d'une vraie validation, jamais d'un import de données. -->
+
+        <record id="fx_deal_demo_1" model="fx.deal">
+            <field name="direction">buy</field>
+            <field name="partner_id" ref="partner_aissatou_diallo"/>
+            <field name="currency_id" ref="base.EUR"/>
+            <field name="quantity">300.0</field>
+            <field name="rate">654.5</field>
+            <field name="payment_mode">cash</field>
+        </record>
+
+        <record id="fx_deal_demo_2" model="fx.deal">
+            <field name="direction">sell</field>
+            <field name="partner_id" ref="partner_cheikh_ahmadou_ba"/>
+            <field name="currency_id" ref="base.USD"/>
+            <field name="quantity">800.0</field>
+            <field name="rate">608.0</field>
+            <field name="payment_mode">credit</field>
+            <field name="date_due" eval="(DateTime.today() + timedelta(days=30)).strftime('%Y-%m-%d')"/>
+        </record>
+
+        <record id="fx_deal_demo_3" model="fx.deal">
+            <field name="direction">buy</field>
+            <field name="partner_id" ref="partner_fatou_bintou_sow"/>
+            <field name="currency_id" ref="base.EUR"/>
+            <field name="quantity">150.0</field>
+            <field name="rate">654.5</field>
+            <field name="payment_mode">cash</field>
+        </record>
+
+        <record id="fx_deal_demo_4" model="fx.deal">
+            <field name="direction">sell</field>
+            <field name="partner_id" ref="partner_teranga_import_export"/>
+            <field name="currency_id" ref="base.USD"/>
+            <field name="quantity">1000.0</field>
+            <field name="rate">608.0</field>
+            <field name="payment_mode">credit</field>
+            <field name="date_due" eval="(DateTime.today() + timedelta(days=30)).strftime('%Y-%m-%d')"/>
+        </record>
+
+        <record id="fx_deal_demo_5" model="fx.deal">
+            <field name="direction">sell</field>
+            <field name="partner_id" ref="partner_baobab_voyages"/>
+            <field name="currency_id" ref="base.CHF"/>
+            <field name="quantity">200.0</field>
+            <field name="rate">685.0</field>
+            <field name="payment_mode">cash</field>
+        </record>
+
+    </data>
+</odoo>

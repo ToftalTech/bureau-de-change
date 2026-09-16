@@ -12,7 +12,7 @@ class ResCompany(models.Model):
     fx_margin_account_id = fields.Many2one(
         'account.account',
         string="Compte de marge de change",
-        domain="[('company_id', '=', id)]",
+        domain="[('company_ids', 'in', id)]",
     )
     fx_currency_account_ids = fields.One2many(
         'fx.currency.account', 'company_id',
