@@ -1,3 +1,5 @@
+from datetime import datetime, time
+
 from odoo import api, fields, models, Command, _
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import float_compare
@@ -161,81 +163,107 @@ class FxDeal(models.Model):
         return True
 
     def _create_account_move(self):
+        """Pilote un bon de commande natif (vente ou achat) plutôt que de
+        construire l'écriture à la main : le cycle commande -> facture ->
+        comptabilisation reste entièrement celui de Vente/Achat. Les appels
+        transitant par sudo() ne font que déléguer une action que l'opération
+        fx.deal elle-même autorise déjà (le caissier n'obtient pas d'accès
+        direct aux bons de commande ou aux factures via ce détour)."""
         self.ensure_one()
         company = self.company_id
-        journal = (
-            company.fx_sale_journal_id if self.direction == 'sell'
-            else company.fx_purchase_journal_id
-        )
-        if not journal:
-            raise UserError(_(
-                "Aucun journal des opérations de change n'est configuré pour la "
-                "société %s (Comptabilité > Configuration > Bureau de change).",
-                company.name,
-            ))
         position_account = company._get_fx_position_account(self.currency_id)
         if not position_account:
             raise UserError(_(
                 "Aucun compte de position n'est configuré pour la devise %s.",
                 self.currency_id.name,
             ))
+        currency_account = company.fx_currency_account_ids.filtered(
+            lambda l: l.currency_id == self.currency_id
+        )
+        currency_product = currency_account.sudo()._get_or_create_product()
+        date_order = datetime.combine(self.date, time.min)
 
         if self.direction == 'sell':
-            margin_account = company.fx_margin_account_id
-            if not margin_account:
+            margin_product = company.sudo()._get_or_create_fx_margin_product()
+            order = self.env['sale.order'].sudo().create({
+                'partner_id': self.partner_id.id,
+                'company_id': company.id,
+                'currency_id': company.currency_id.id,
+                'date_order': date_order,
+                'order_line': [
+                    Command.create({
+                        'product_id': currency_product.id,
+                        'product_uom_qty': 1,
+                        'product_uom_id': currency_product.uom_id.id,
+                        'price_unit': self.cost_xof,
+                        'tax_ids': [Command.clear()],
+                        'name': _(
+                            "Cession de %(qty)s %(cur)s au coût moyen pondéré",
+                            qty=self.quantity, cur=self.currency_id.name,
+                        ),
+                    }),
+                    Command.create({
+                        'product_id': margin_product.id,
+                        'product_uom_qty': 1,
+                        'product_uom_id': margin_product.uom_id.id,
+                        'price_unit': self.margin_xof,
+                        'tax_ids': [Command.clear()],
+                        'name': _(
+                            "Marge de change sur cession de %(cur)s",
+                            cur=self.currency_id.name,
+                        ),
+                    }),
+                ],
+            })
+            order.action_confirm()
+            move = order._create_invoices(final=True)[:1]
+            if not move:
                 raise UserError(_(
-                    "Aucun compte de marge de change n'est configuré pour la "
-                    "société %s.",
-                    company.name,
+                    "La facture client n'a pas pu être générée depuis le bon "
+                    "de commande %s.", order.name,
                 ))
-            move_type = 'out_invoice'
-            invoice_line_vals = [
-                Command.create({
-                    'name': _(
-                        "Cession de %(qty)s %(cur)s au coût moyen pondéré",
-                        qty=self.quantity, cur=self.currency_id.name,
-                    ),
-                    'account_id': position_account.id,
-                    'quantity': 1,
-                    'price_unit': self.cost_xof,
-                    'tax_ids': [Command.clear()],
-                }),
-                Command.create({
-                    'name': _(
-                        "Marge de change sur cession de %(cur)s", cur=self.currency_id.name,
-                    ),
-                    'account_id': margin_account.id,
-                    'quantity': 1,
-                    'price_unit': self.margin_xof,
-                    'tax_ids': [Command.clear()],
-                }),
-            ]
+            if company.fx_sale_journal_id:
+                move.journal_id = company.fx_sale_journal_id.id
         else:
-            move_type = 'in_invoice'
-            invoice_line_vals = [
-                Command.create({
-                    'name': _(
-                        "Acquisition de %(qty)s %(cur)s", qty=self.quantity, cur=self.currency_id.name,
-                    ),
-                    'account_id': position_account.id,
-                    'quantity': 1,
-                    'price_unit': self.amount_xof,
-                    'tax_ids': [Command.clear()],
-                }),
-            ]
+            order = self.env['purchase.order'].sudo().create({
+                'partner_id': self.partner_id.id,
+                'company_id': company.id,
+                'currency_id': company.currency_id.id,
+                'date_order': date_order,
+                'order_line': [
+                    Command.create({
+                        'product_id': currency_product.id,
+                        'product_qty': 1,
+                        'product_uom_id': currency_product.uom_id.id,
+                        'price_unit': self.amount_xof,
+                        'date_planned': self.date,
+                        'tax_ids': [Command.clear()],
+                        'name': _(
+                            "Acquisition de %(qty)s %(cur)s",
+                            qty=self.quantity, cur=self.currency_id.name,
+                        ),
+                    }),
+                ],
+            })
+            order.button_confirm()
+            if order.state != 'purchase':
+                # Le paramétrage "double validation" des Achats ne doit pas
+                # bloquer une opération de change déjà validée par fx.deal.
+                order.button_approve()
+            order.action_create_invoice()
+            move = order.invoice_ids[:1]
+            if not move:
+                raise UserError(_(
+                    "La facture fournisseur n'a pas pu être générée depuis le "
+                    "bon de commande %s.", order.name,
+                ))
+            if company.fx_purchase_journal_id:
+                move.journal_id = company.fx_purchase_journal_id.id
 
-        move_vals = {
-            'move_type': move_type,
-            'journal_id': journal.id,
-            'partner_id': self.partner_id.id,
-            'currency_id': company.currency_id.id,
-            'invoice_date': self.date,
-            'invoice_date_due': self.date_due if self.payment_mode == 'credit' else self.date,
-            'invoice_origin': self.name,
-            'invoice_line_ids': invoice_line_vals,
-            'company_id': company.id,
-        }
-        return self.env['account.move'].create(move_vals)
+        move.invoice_date = self.date
+        move.invoice_origin = self.name
+        move.invoice_date_due = self.date_due if self.payment_mode == 'credit' else self.date
+        return move
 
     def write(self, vals):
         for deal in self:

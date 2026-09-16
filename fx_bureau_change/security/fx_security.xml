@@ -21,8 +21,8 @@
         <record id="group_fx_manager" model="res.groups">
             <field name="name">Gérant</field>
             <field name="privilege_id" ref="privilege_fx_bureau_change"/>
-            <field name="implied_ids" eval="[(4, ref('group_fx_cashier'))]"/>
-            <field name="comment">Accès complet : cours du jour, positions, marge, configuration comptable.</field>
+            <field name="implied_ids" eval="[(4, ref('group_fx_cashier')), (4, ref('account.group_account_invoice'))]"/>
+            <field name="comment">Accès complet : cours du jour, positions, marge, configuration comptable, factures générées.</field>
         </record>
 
     </data>

@@ -9,20 +9,22 @@ Module métier pour un bureau de change (client unique, base de test).
 
 - Cours du jour par devise (achat / vente)
 - Position en devises valorisée au coût moyen pondéré (CMP)
-- Opérations de change (fx.deal) générant nativement une facture client
-  (vente de devises) ou une facture fournisseur (achat de devises), avec
-  comptabilisation explicite de la marge de change
+- Opérations de change (fx.deal) qui pilotent un bon de commande client
+  (vente de devises) ou un bon de commande fournisseur (achat de devises)
+  natif, lequel génère lui-même sa facture via les flux standards Vente et
+  Achat, avec comptabilisation explicite de la marge de change
 
-Ce module dépend uniquement du module Comptabilité (account) : la balance,
-le lettrage, la balance auxiliaire et les rapports comptables (SYSCOHADA)
-restent entièrement natifs. Aucune écriture manuelle de type "entry" : chaque
-opération de change est une facture, avec ses propres comptes paramétrables.
+Ce module s'appuie sur Contacts, Ventes, Achats et Comptabilité : la balance,
+le lettrage, la balance auxiliaire, les rapports SYSCOHADA et le cycle
+devis/commande/facture restent entièrement natifs. Le CMP est calculé par ce
+module (fx.rate / fx.position) ; la comptabilisation de chaque opération
+passe par un vrai bon de commande, jamais par une écriture manuelle.
 """,
     'version': '19.0.1.0.0',
     'category': 'Accounting/Accounting',
     'author': "Toftal Technologies",
     'license': 'LGPL-3',
-    'depends': ['account'],
+    'depends': ['contacts', 'sale', 'purchase', 'account'],
     'data': [
         'security/fx_security.xml',
         'security/ir.model.access.csv',
